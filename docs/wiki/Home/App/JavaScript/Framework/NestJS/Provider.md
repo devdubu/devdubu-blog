@@ -1,0 +1,376 @@
+---
+종료 날짜: 2025-04-10
+시작 날짜: 2025-04-10
+분류: 공부
+카테고리: BackEnd
+세부 카테고리:
+  - JavaScript
+  - NestJS
+특징:
+  - Book
+  - 개념
+sticker: vault//이미지/개발 로고/TechIconSVG/Nest.js.svg
+---
+
+:::info Provider?
+- 비즈니스 로직을 수행하는 역할을 하는 것
+
+:::
+
+컨트롤러가 이 역할을 수행할 수 있겠지만, 소프트웨어 구조 상 분리해두는 것이 SRP에 더 부합합니다.
+
+:::note Provider의 종류
+- service : 서비스
+- repository : 저장소
+- factory: 팩터리
+- helper : 헬퍼
+
+:::
+
+위 처럼 여러가지 형태로 구현이 가능합니다.
+![이미지 창고/2.App/JWT Tip/Diagram.3.svg](이미지 창고/2.App/JWT Tip/Diagram.3.svg)
+Nest에서 제공하는 프로바이더의 핵심은 의존성을 주입할 수 있다는 점입니다.
+의존성을 주입하기 위한 라이브러리가 많지만, Nest가 이를 제공해주기 때문에 손 쉽게 사용이 가능합니다.
+
+`UserController`코드를 다시 본다면
+```ts
+@Controller('users')
+export class UserController{
+	constructor(private readonly usersService: UsersService){ }
+	...
+
+	@Delete(':id')
+	remove(@Param('id') id: string){
+		return this.usersService.remove(+id)
+	}
+}
+```
+
+컨트롤러는 비즈니스 로직을 직접 수행하지 않습니다.
+컨트롤러에 연결된 `UsersService` 클래스에서 수행합니다.
+
+`UsersService`는 `UsersController`의 생성자에서 주입 받아, `UsersService` 라는 객체 멤버 변수에 할당되어 사용했습니다.
+아직 데이터 베이스에 연결하지 않았기 때문에 `UsersService` 내부의 코드는 문자열을 리턴하는 임시 코드만 작성되어 있지만, `UsersService`에 어떻게 작업을 위임하는지 보여줍니다.
+
+```ts
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class UsersService{
+	...
+	remove(id: number){
+		return 'This action remove a #${id} user';
+	}
+
+}
+```
+
+`@Injectable` 데커레이터를 주목하세요
+
+`UsersService` 클래스에 이 데커레이터를 선언함으로써 다른 어떤 <mark>Nest 컴포넌트</mark>에서도 <mark>주입</mark>할 수 있는 <mark>Provider</mark>가 됩니다.
+별도의 scope를 지정해주지 않으면, 일반적으로 싱글턴 인스턴스가 됩니다.
+
+# Provider의 등록과 사용
+## Provider 등록
+Provider 인스턴스 역시 모듈에서 사용할 수 있도록 등록을 해줘야 합니다.
+자동 생성된 코드에서 `UsersModule` 모듈에 등록해둔 것을 볼 수 있습니다.
+
+```ts
+@Module({
+	...
+	providers: [UsersService]
+})
+
+export class UsersModule{ }
+```
+
+## 속성 기반 주입
+지금까지는 생성자를 통해 provider를 주입 받았습니다.
+하지만, provider를 직접 주입 받아 사용하지 않고, <mark>상속 관계</mark>에 있는 <mark>자식 클래스</mark>를 주입 받아 사용하고 싶은 경우가 있습니다.
+
+레거시 클래스를 확장한 새로운 클래스를 만드는 경우 새로 만든 클래스를 provider로 제공하고 싶은 경우입니다.
+이럴때는 자식 클래스에서 부모 클래스가 제공하는 함수를 호출하기 위해서는 
+부모 클래스에서 필요한 provider를 `super()`를 통해 전달 해줘야 합니다.
+
+`base-service.ts`
+```ts
+// @Injectable이 선언되어 있지 않습니다.
+// BaseService 클래스를 직접 참조하지 않기 때문입니다.
+
+export class BaseService{
+	constructor(private readonly serviceA: ServiceA) { }
+
+	getHello( ): string{
+		return 'Hello World BASE!';
+	}
+
+	doSomeFuncFromA(): string{
+		return this.serviceA.getHello();
+	}
+}
+```
+
+`service-A.ts`
+```ts
+@Injectable()
+export class ServiceA{
+	getHello():string{
+		return 'Hello World A!';
+	}
+}
+```
+
+`service-B.ts`
+```ts
+@Injectable()
+export class ServiceB extends BaseService{
+	getHello(): string{
+		return this.doSomeFuncFromA()
+	}
+}
+```
+
+만약 Controller에서 ServiceB를 주입하고, `getHello()`를 호출한다면, 이는 `BaseService`의 `doSomeFuncFromA` 함수를 호출하게 됩니다.
+하지만, `BaseService`는 주입을 받을 수 있는 클래스로 선언되어 있지 않기 때문에, Nest의 IoC 컨테이너는 생성자에 선언된 `ServiceA`를 주입하지 않습니다.
+이 상태에서 컨트롤러에 서비스를 호출하는 엔드포인트를 만들고 작동해보면 에러가 발생합니다.
+```ts
+@Controller()
+export class AppController{
+	constructor(
+		private readonly serviceB: ServiceB,
+	){ }
+
+	@Get('/serviceB')
+	getHelloC(): string{
+		return this.serviceB.getHello()
+	}
+}
+```
+테스트를 하게 된다면, 오류를 뱉는다.
+
+이 문제를 해결하기 위해서는 `ServiceB`에서 `super`를 통해 `ServiceA`의 인스턴스를 전달 해줘야 합니다
+
+```ts
+@Injectable()
+export class ServiceB extends BaseService{
+	constructor(private readonly _serviceA: ServiceA){
+		super(_serviceA);
+	}
+
+	getHello(): string{
+		return this.doSomeFuncFromA()
+	}
+}
+```
+
+이렇게 매번 `super`로 필요한 provider를 전달하는 방식은 매우 귀찮습니다ㅣ.
+이럴 때는 속성 기반 provider를 이용할 수 있습니다.
+
+`BaseService` 클래스의 serviceA 속성에 `@Inject` 데이커레이터를 달아줍니다.
+데커레이터의 인수 타입, 문자열, 심벌을 사용할 수 있습니다.
+어떤 걸 쓸지는 provider가 어떻게 정의 되었느냐에 따라 달라집니다.
+
+`@Injectable`이 선언된 클래스는 클래스 이름 타입을 쓰면 됩니다.
+문자열과 심벌은 커스텀 provider일 경우 사용합니다.
+
+:::tip 상속 관계에 있지 않은 경우는 속성 기반 주입을 사용하지 말고 생성자 기반 주입을 사용하는 것을 권장합니다.
+
+:::
+
+## 유저 서비스에 회원 가입 로직 구현하기
+
+![Image/BackEnd/NodeJS/NestJS/Provider/Diagram-4.svg](/img/이미지 창고/Diagram-4.svg)
+1. 회원 가입화면을 통해 유저 정보를 입력 받아 유저 생성 요청을 받는다.
+	1. 백엔드 기능만 구현
+2. DB에 유저 정보를 저장하고 유저에게 회원 가입 확인 이메일을 발송합니다.
+	1. 이메일을 발송하는 것은 가입하고자 하는 회원의  이메일이 유효한 이메일인지 검증하는 과정임
+3. 이메일 본문에 포함된 링크를 누르면 승인 요청이 들어오게 되고 회원 가입 준비 단계에 있는 유저를 승인합니다.
+
+### UsersService Provider 생성
+```shell
+nest g s Users
+```
+
+### 회원 가입
+- POST `/users` 엔드포인트를 담당하는 컨트롤러를 수정합니다.
+```ts
+import { Body, Controller, Post } from '@nestjs/common'
+import { CreateUserDto } from './dto/create-user.dto'
+import { UsersService } from './users.service'
+
+@Controller('users')
+export class UsersControler{
+	constructor(private usersService: usersService) { }
+
+	@Post
+	async createUser(@Body() dto: CreateUserDto): Promise<void> {
+		const { name, email, password } = dto;
+		await this.usersService.createUser(name, email, password)
+	}
+}
+
+```
+- UsersService 를 컨트롤러에 주입합니다.
+- dto에서 얻은 정보를 UsersService에 전달합니다
+
+내부 구현 담당하는 `UsersService` 구현하기 앞서 이메일 검증 시 필요한 토큰 형식을 `uuid`로 쓸것이기에 설치를 해줍니다.
+```shell
+npm i uuid
+npm i --save-dev @types/uuid
+```
+
+`UsersService` 구현은 다음과 같습니다.
+```ts
+import * as uuid from 'uuid';
+import { Injectable } from '@nestjs/common'
+
+@Injectable()
+export class UsersService{
+	async createUser(name: string, email: string, password: string){
+		await this.checkUserExists(email);
+		
+		const signupVertifyToken = uuid.v1();
+		
+		await this.saveUser(name, email, password, signupVerifyToken);
+		await this.sendMemberJoinEmail(email, signupVerifyToken);
+	}
+
+	private checkUserExists(email:string){
+		return false;
+	}
+
+	private saveUser(name: string, email:string, password: string, signupVerifyTokenL string){
+		return // TODO : DB 연동
+	}
+
+	private async sendMemberJoinEmail(email: string, signupVerifyToken: string){
+		await this.emailService.sendMemberJoinVerification(email, signupVerifyToken)
+	}
+}
+```
+
+1. 가입하려는 유저가 존재하는자 검사
+	1. 이미 존재하면, 에러 발생
+	2. DB연동후 구현이므로 false로 구현
+2. 유저를 DB에 저장
+	1. DB연동이 안됐으므로, 저장 됐다고 가정
+3. 토큰은 유저가 회원 가입 메일을 받고 링크를 눌러 이메일 인증을 할때 다시 받게 되는 토큰 입니다.
+	1. 이 토큰으로 현재 가입 하려는 회원이 본인의 이메일로 인증한 것인지 한번 더 검증
+4. 회원 가입 인증 이메일 발송
+
+### 회원 가입 이메일 발송
+이메일 서비스를 직접 만들어도 되지만, 비즈니스에 더 집중하기 위해 보통 외부 이메일 서비스를 많이 사용하는 편압니다.
+여기서는 간단하게 무료로 이메일을 전송시켜주는 `nodemailer`라는 라이브러리를 사용하겠습니다.
+상용은 절대 불가입니다.
+
+```shell
+npm i nodemailer
+npm i @types/nodemailer --save-dev
+```
+
+`UsersService`는 유저의 정보를 저장, 조회 하는 역할을 위주로 합니다.
+Email 처리 담당은 EmailService 프로바이더를 새로 만들겠습니다.
+
+```shell
+nest g s Email
+```
+이제 UsersService의 sendMemberJoinEmail 메서드를 구현할 수 있습니다.
+먼저 EmailService를 UsersSetvice에서 주입 받고 메일 발송 메서드를 호출 하면 됩니다.
+
+```ts
+import { EmailService } from 'src/email/email.service'
+
+export class UsersService{
+	constructor(private emailService: EmailService){ }
+	...
+
+	private async sendMemberJoinEmail(email:string, signupVerifyToken: string){
+		await this.emailService.sendMemberJoinVerification(email, signuoVerfyToken)
+	}
+}
+```
+
+남은 일을 EmailService nodemail를 이용해서 이메일을 보내는 것입니다.
+
+```ts
+import Mail = require('nodemail/lib/mailer');
+import * as nodemailer from 'nodemailer';
+
+import { Injectable } from '@nestjs/common';
+
+interface EmailOptions{
+	to:string;
+	subject: string;
+	html: string;
+}
+
+@Injectable()
+export class EmailService{
+	private transporter: Mail;
+	constructor(){
+		this.transporter = nodemailer.crateTransport({
+			service: 'Gmail',
+			auth:{
+				user: 'YOUR_GMAIL',
+				pass: 'YOUR_PASSWORD'
+			}
+		})
+	}
+	async sendMemberJoinVerification(emailAddress:string, signupVerifyToken:string){"
+		const baseUrl = 'http://localhost:3000';
+		const url = `${basUrl}/users/email-verify?signupVerifyToken=${signupVerifyToken}`;
+
+		const mailOptions: EmailOpations={
+			to:emailAddress,
+			subject: '가입 인증 메일',
+		}
+		html: `
+			가입확인 버튼을 누 르시면 가입 인증이 완료 됩니다. </br>
+			<form action="${url}" method="POST"> 
+				<button>가입 확인</button>
+			</form
+		`
+	}
+
+
+	return await this.transporter.sendMail(mailOptions);
+}
+
+```
+
+여기서 주의해야할 점은 서버 전송을 이용할 이메일 서비스의 계정과 비밀 번호, 그리고 유저가 인증할 때, URL을 구성하는 도메인 주소가 하드코딩 되어잇다는 것입니다.
+
+모데인 주소는 우리가 지금 로컬에서 서버를 띄워서 구현하고 있기 때문에 `localhost:3000`으로 했습니다.
+`YOUR_EMAIL`, `YOUR_PASSWORD` 부분은 여러분이 사용하시는 Gmail 계쩡을 소스에 입력해보세요
+
+### 이메일 인증
+받은 메일을 확인하고  `[가입확인]` 버튼을 눌러 요청이 전달 되는지 확인해보세요
+`email-verify` 엔드포인트로 요청이 왔을때 컨트롤러에서 dto 객체에 서버 콘솔 로그로 출력하도록 되어있습니다.
+다음과 같은 로그가 출력될 것입니다.
+```shell
+{ signupVerifyToken : ~ }
+```
+
+이메일 인증 로직 역시 UsersService에 처리 로직을 위임하도록 합시다
+
+```ts
+async verifyEmai(signupVerifyToken: string): Promise<string>{
+	// TODO
+	// 1. DB에서 signupVerifyToken으로 회원 가입 처리중인 유저가 있는지 조회하고 없다면 에러 처리
+	// 2. 바로 로그인 상태가 되도록 JWT 발급
+	
+	throw new Error(‘Method not implemented.’)
+}
+```
+
+### 로그인
+이제 로그인 요청을 처리해 봅시다.
+컨트롤러에는 요청, 응답 처리만 하고 UsersService로 위임합니다.
+```ts
+@Post(‘/login’)
+async login(@Body() dto: UserLoginDto):Promise<string>{
+	const { email, password } = dto;
+
+	return await this.usersService.login(email, password)
+}
+```

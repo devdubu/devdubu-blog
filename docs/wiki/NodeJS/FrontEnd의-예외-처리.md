@@ -1,0 +1,38 @@
+---
+slug: "FrontEnd의-예외-처리"
+---
+JS라는 언어 자체는 굉장히 포괄적인 언어다.
+그래서 에러를 너무 포괄한 나머지 싸고 댕긴다
+
+하;;
+
+해당 챕터는 내가 지금까지 겪은 에러 처리에 대한 방법들을 정리해보려고 한다.
+
+
+초반에는 js에서 `null`, `undefined` 에 대한 차이를 그렇게 심각하게 받아들이지 않았는데
+생각보다 꽤 많은 차이가 있다.
+
+# 예외 처리 대상
+## `undefined`
+매우 죄악이다
+모든 악의 근원..
+
+사실 그냥 변수에 대해서는 딱히 문제가 없지만, 이게 객체로 오면 얘기가 달라진다.
+```js
+const exObject = {
+	name: "예시 에욤"
+}
+
+console.log(exObject.name)
+```
+위 코드는 다들 예상이 가는 결과물을 내뿜는다 하지만,
+```js
+const undefineObject = { }
+console.log(undefineObject.name)
+```
+
+---
+
+#NodeJS #FrontEnd #JavaScript 
+
+---

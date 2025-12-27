@@ -1,0 +1,209 @@
+---
+종료 날짜: 2025-04-10
+시작 날짜: 2025-04-10
+분류: 공부
+카테고리: BackEnd
+세부 카테고리:
+  - NestJS
+  - JavaScript
+sticker: vault//이미지/개발 로고/TechIconSVG/Nest.js.svg
+
+slug: "Nest-Middleware"
+---
+# Middleware
+웹 개발에서 일반적으로 미들웨어라고 함은 Route handler가 client의 요청을 처리하기 전에 수행되는 컴포넌트를 말합니다.
+
+![Image/BackEnd/NodeJS/NestJS/Nest Middleware/Diagram.svg](/img/이미지 창고/Diagram.svg)
+Nest 의 미들웨어는 기본적으로 Express의 미들웨어랑 동일합니다.
+
+:::tip Express 문서에는 미들웨어가 다음과 같은 동작을 수행할 수 있다고 기술 되어있습니다.
+- 어떤 형태의 코드라도 수행할 수 있다.
+- 요청과 응답에 변형을 가할 수 있다.
+- 요청/응답 주기 를 끝낼 수 있다.
+- 여러 개의 미들웨어를 사용한다면 `next()` 호출 스택상 다음  미들웨어로 제어권을 전달 한다.
+
+:::
+
+요청/응답 주기를 끝낸다는 것은 응답을 보내거나 에러 처리를 해야한다는 뜻입니다.
+만약 현재 미들웨어가 응답 주기를 끝내지 않을 것이라면 반드시 `nest()`를 호출 해야 합니다.
+
+그렇지 않으면 애플리케이션은 더 이상 아무것도 할 수 없는 상태가 됩니다
+
+:::NOTE 미들웨어를 활용하여 다음과 같은 작업들을 수행합니다.
+- **쿠키 파싱**
+- 쿠키를 파싱하여 사용하기 쉬운 데이터 구조로 변경합니다.
+- 이를 이용하면 Route handler가 매번 쿠키를 파싱할 필요가 없습니다.
+- **세션 관리**
+- 세션 쿠키를 찾고, 해당 쿠키에 대한 세션의 상태를 조죄해서 요청에 세션 정보를 추가 합니다.
+- 이를 통해 다른 handler가 세션 객체를 이용할 수 있게 해줍니다.
+- **인증 / 인가**
+- 사용자가 서비스에 접근 가능한 권한이 있는지 확인합니다.
+- 단 Nest는 인가를 구현할 때 가드를 이용하도록 권장합니다.
+- **본문 파싱**
+- 본문은 POST/PUT 요청으로 들어오는 JSON 타입 뿐 아니라 파일 스트림과 같은 데이터도 있습니다.
+- 이 데이터를 유행에 따라 읽고 해석한 다음 매개 변수에 넣는 작업을 합니다.
+- 앞서 컨트롤러를 다룰 때 봤던 본무은 이렇게 분석된 결과가 포함되어 있습니다.
+
+:::
+
+그 외 원하는 기능이 있다면, 직접 구현도 가능합니다.
+커스텀 미들웨어를 잘 만들면 도메인에 관심사를 집중하여 애플리케이션을 작성할 수 있습니다.
+
+## Logger 미들웨어
+미들웨어 함수로 작성하거나 `NestMiddleware` 인터페이스를 구현한 클래스로 작성할 수 있습니다.
+들어온 요청에 포함된 정보를 logging하기 위한 Logger를 미들웨어로 구현하면 아래와 같습니다.
+
+`logger.middleware.ts`
+```ts
+import { Injectable, NestMiddleware } from '@nestjs/common'
+import { Request, Response, NextFunction } from 'express'
+
+@Injectable()
+export class LoggerMiddleware implements NestMiddleware{
+	use(req: Request, res: Response, next: NextFunction){
+		console.log('Request...')
+		next();
+	}
+}
+```
+
+`app.module.ts`
+```ts
+import { MiddlwareConsumer, Module, NestModule } from '@nestjs/common'
+import { LoggerMiddleware } from './logger/logger.middleware'
+import { UsersModule } from './users/users.module';
+
+@Module({
+	imports: [UsersModule],
+})
+
+export class AppModule implements NestModule{
+	configure(consumer: MiddlewareConsumer): any{
+		consumer.apply(LoogerMiddleware).forRoutes('/users')
+	}
+}
+```
+
+`/users` 경로로 들어오는 요청을 수행해보면 콘솔에 `Request....` 가 찍히는 것을 볼수 있습니다.
+
+## MiddlewareConsumer
+이전 코드에서 configure 메서드에 인수로 전달된 `MiddlewareConsumer` 객체를 이용해서 미들웨어를 어디에 적용할지 관리 할 수 있습니다.
+`apply` 메서드의 원형은 다음과 같습니다.
+
+```ts
+apply(...middleware: (Type<any>  | Function)[]) :  MiddlewareConfigProxy;
+```
+
+`apply` 메서드에 미들웨어 함수 또는 클래스를 콤마로 나열하면 됩니다.
+이때 미들웨어가 나열 된 순서대로 적용됩니다.
+만약 `Logger2Middleware` 라는 미들웨어가 하나더 있다고 해봅시다.
+
+```ts
+import { Injectable, NestMiddleware } from '@nestjs/common'
+import { Request, Response, NextFunction } from 'express'
+
+@Injectable()
+export class Logger2Middleware implements NestMiddleware{
+	use(req: Request, res: Response, next: NextFunction){
+		console.log('Request ....')
+		next()
+	}
+}
+```
+
+그리고 2개의 미들웨어를 적용한다면 아래와 같아질 것입니다.
+```ts
+configure(consumer: MiddlewareConsumer):any{
+	consumer.apply(LoggerMiddleware, Logger2Middleware).forRoutes('/users')
+}
+```
+
+
+`/users` 경로의 요청에 로그가 2개가 찍히는 것을 볼 수 있습니다.
+`forRoutes` 메서드의 원형도 살펴 봅시다.
+`forRoutes`는 `apply` 함수의 리턴타입인 `MiddlewareConfigProxy` 로 정의 되어 있습니다.
+
+```ts
+import { Type } from ‘../type.interface‘;
+import { RouteInfo } from ‘./middleware-configuration.interface’
+import { MiddlewareConsumer } from ‘./middleware-consumer.interface’
+export interface MiddlewareConfigProxy{
+	exclude(…routes: ( string | RouteInfo)[] ): MiddlewareConfigProxy;
+	forRoutes(…routes: ( string | Type<any> | RouteInfo)[]): MiddlewareConsumer;
+}
+```
+
+예제에서 봤듯 `forRoutes`의 인수로 문자열 형식의 경로를 직접 주거나, 컨트롤러 클래스 이름을 주어도 되고,`RouteInfo` 객체를 넘길 수도 있습니다.
+보통은 Controller Class를 주어 동작하도록 합니다.
+
+```ts
+import { MiddlewareConsumer, Module, NestModule } from ‘@nestjs/common’;
+import { LoggerMiddleware } from ‘./logger/logger.middleware’;
+import { Logger2Middleware } from ‘./logger/logger2.middleware’;
+import { UsersController } from ‘./users/users.controller’;
+import { UsersModule } from ‘./users/users.module’;
+
+@Module({
+	imports: [UsersModule],
+})
+export class AppModule implements NestModule{
+	configure(consumer: MiddlewareConsumer):any{
+		consumer.apply(LoggerMiddleware, Logger2Middleware).forRoutes(UsersController)
+	}
+}
+```
+미들웨어에서 `next()` 함수 호출부를 주석으로 막아서 행이 걸리는지 확인 할 수 있습니다.
+```ts
+@Injectable()
+export class LoggerMiddleware implements NestMiddleware{
+	use(req: Request, res: Response, next: NextFunction){
+		console.log(‘Request…’)
+		res.send(‘DONE’)
+	}
+}
+```
+
+`exclude` 함수는 예상하듯이 미들웨어를 적용하지 않을 Routing 경로를 설정합니다.
+
+```ts
+…
+export class AppModule implements NestModule{
+	configure(consumer: MiddlewareConsumer):any {
+		consumer.apply(LoggerMiddleware, Logger2Middleware).exclud({ path: ‘/users’, method: RequestMethod.GET }).forRoutes(UsersController)
+	}
+}
+```
+- `/users` 경로로 전달된 `GET` 요청일 때는 LoggerMiddleware, Logger2Middleware가 무시됩니다.
+
+## 전역으로 사용하기
+미들웨어를 모든 모듈에 적용하려면 `main.ts`를 수정해야합니다.
+`NestFactory.create`로 만든 앱은 `INestApplication` 타입을 가지고 있는데, 여기에 정의된 `use()` 메서드를 사용하여, 미들웨어를 설정합니다.
+하지만, `use()` 메서드는 클래스를 인수로 받을수 없습니다.
+
+```ts
+import { Request, Response, NextFunction } from ‘express’;
+
+export function logger3(req: Request, res: Response, next: NextFunction){
+	console.log(‘Request3…’)
+	next()
+}
+```
+그리고 `main.ts`에서 적용합니다.
+
+```ts
+import { logger3 } from ‘./logger3/logger3.middleware’;
+
+async function bootstrap(){
+	const app = await NestFactory.create(AppModule)
+	app.use(logger3)
+	await app.listen(3000)
+}
+
+bootstrap();
+```
+- `exclude` 옵션을 다시 풀고 요청을 보낸다면, `logger3` 미들웨어가 먼저 적용되는 것을 알 수 있습니다.
+
+:::note 함수로 만든 미들웨어의 단점은 DI 컨테이너를 사용할 수 없다는 것 입니다.
+- 즉, 프로바이더를 주입 받아 사용할 수 없습니다.
+
+:::

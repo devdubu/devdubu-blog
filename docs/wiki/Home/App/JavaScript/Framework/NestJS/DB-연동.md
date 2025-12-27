@@ -1,0 +1,153 @@
+---
+종료 날짜: 2025-04-10
+시작 날짜: 2025-04-10
+분류: 공부
+카테고리: BackEnd
+세부 카테고리:
+  - JavaScript
+  - NestJS
+특징:
+  - Book
+  - 개념
+sticker: vault//이미지/개발 로고/TechIconSVG/Nest.js.svg
+
+slug: "DB-연동"
+---
+해당 자료에서는 MySQL과 TypeORM을 이용하여 데이터 베이스에 연결하는 방법을 설명합니다.
+
+# MySQL DB 설정
+로컬에서 MySQL을 설정하는 방법은 여러가지 입니다.
+Docker를 이용해도 되고, 로컬로 깔아서 설치해도 되고, 자유 입니다.
+
+:::tip 한글 정렬이 잘 되기 위해서는 utf8mb4 로 Charset을 설정합니다.
+
+
+:::
+
+# TypeORM으로 DB 연결
+우선 Nest에 TypeORM을 설치 하겠습니다.
+```shell
+npm i typeorm@0.3.7 @nestjs/typeorm@9.0.0 mysql2
+```
+
+이제 `@nestjs/typeorm` 패키지에서 제공하는 `TypeOrmMoudule`을 이용하여 DB 연결할 수 있습니다.
+
+```ts
+…
+import { TypeOrmModule } from ‘@nestjs/typeorm’;
+
+@Module({
+	imports:[
+		…
+		TypeOrmModule.forRoot({ // AppModule에 TypeOrmModule을 동적 모듈로 가져옵니다.
+			type: ‘myslq’, // TypeOrmModule이 다루고자 하는 데이터 베이스 타입입니다.
+			host: ‘localhost’, // 연결할 데이터 베이스의 호스트의 주소를 입력합니다.
+			port: 3306, //  데이터 베이스에 연결할 유저명과 패스워드 입니다.
+			username: ‘root’,
+			password: ‘test’,
+			database: ‘test’, // 연결하려는 DB의 스키마 명입니다.
+			entities: [__dirname + ‘/**/*.entity{.ts, .js}’], // 소스 코드 내에서 TypeORM이 구동될 때 인식하도록 할 엔티티 클래스의 경로를 지정합니다.
+			synchronize: true, // synchronize 옵션은 서비스 구동 시 소스 코드 기반으로 DB 스키마를 동기화할지 여부 입니다.
+		}),
+	]
+})
+
+export class AppModule{ }
+```
+
+`TypeOrmModule.forRoot` 함수에 전달하는 `TypeOrmModuleOptions` 객체를 좀 더 자세히 살펴 보겠습니다.
+
+```ts
+export declare type TypeOrmModuleOptions = {
+	retryAttempts?: number;
+	retryDelay?: number;
+	toRetry?: (err: any)=>boolean;
+	autoLoadEntities?: boolean;
+	keepConnectionAlive?: boolean;
+	verboseRetryLog?: boolean;
+} & Partial<DataSourceOptions>;
+```
+- `retryAttempts`
+	- 연결 시 재시도 횟수
+	- default Value : 10
+- `retryDelay`
+	- 재시도 간의 지연 시간, 단위는 ms
+	- default Value: 3000
+- `toRetry`
+	- 에러가 났을 때 연결을 시도 할지 판단하는 함수
+	- 콜백으로 받은 인수 `err`를 이용하여 연결 여부를 판단하는 함수
+- `autoLoadEntities`
+	- 엔티티를 자동 로드할 지 여부
+- `keepConnectionAlive`
+	- 애플리케이션 종료 후 연결을 유지할지 여부
+- `verboseRetryLog`
+	- 연결을 재시도 할 때 verbose 레벨로 에러 메시지를 보여줄지 여부, 로깅에서 verbose 메시지는 상세 메시지를 의미 합니다.
+
+## 회원 가입요청 유저 정보 저장
+`users.entity.ts`
+```ts
+import { Column, Entity, PrimaryColumn } from ‘typeorm’;
+
+@Entity(‘User’)
+export class UserEntity{
+	@PrimaryColumn()
+	id: string;
+	
+	@Column({length: 30})
+	name: string
+
+	@Column({length: 60})
+	email: string
+
+	@Column({length: 30})
+	password: string
+
+	@Column({length: 60})
+	signupVerifyToken: string
+}
+```
+
+이제 유저 엔티티를 DB에 넣을 수 있도록 `TypeOrmModuleOptions`의 `entities` 속성의 값으로 넣어주셔야 합니다.
+
+```ts
+@Module({
+	imports:[
+		TypeOrmModule.forRoot({
+			…
+			entities: [UserEntity],
+			…
+		})
+	]
+})
+
+export class AppModule{ }
+```
+
+하지만, 이미 우리는 dist 디렉터리 내의 `.entity.ts` 또는 `.entity.js`로 끝나는 파일 명을 가진 소스 코드를 참조하도록 해두었기에, 별다른 구현이 필요 없습니다.
+```ts
+{
+	…,
+	entities:[__dirname+'/**/*.entity{.ts, .js}'],
+	…
+	
+}
+```
+이제 서비스를 다시 구동하면 User 테이블이 생성되어 있는 것을 확인할 수 있습니다.
+이는 로컬 환경에서는 `synchroize` 옵션이 `true`로 되어있기 때문입니다.
+
+```ts
+import { TypeOrmModule } from ‘@nestjs/typeorm’;
+import { UserEntity } from ‘./entity/user.entity’;
+
+@Module({
+	imports:[
+		TypeOrmModule.forRoot({
+			…
+			entities: [UserEntity], // UsersModule에서 forFeature() 메서드로 유저 모듈 내에서 사용할 저장소를 등록합니다.
+			…
+		})
+	]
+})
+
+export class AppModule{ }
+```
