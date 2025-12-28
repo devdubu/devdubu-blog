@@ -222,12 +222,3 @@ git tag -a -m "첫 번째 째 태그 생성" v0.1 # 주석이 있는 태그 생�
 git push origin v0.1
 ```
 
-
-## CLI로 3-way 병합하기
-
-
----
-
-#CICD #git 
-
----

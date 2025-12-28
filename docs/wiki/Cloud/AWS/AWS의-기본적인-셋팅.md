@@ -1,38 +1,6 @@
 ---
 slug: "AWS의-기본적인-셋팅"
 ---
-- [AWS의 기본적인 셋팅](#AWS의 기본적인 셋팅)
-- [AWS 프리티어 소개](#AWS 프리티어 소개)
-	- [AWS 가격 모델](#AWS 프리티어 소개#AWS 가격 모델)
-		- [AWS EC2 과금 방식](#AWS 가격 모델#AWS EC2 과금 방식)
-	- [AWS 프리티어 유의 사항](#AWS 프리티어 소개#AWS 프리티어 유의 사항)
-		- [프리티어 사용 중 요금이 발생 했을 때 대처 방법](#AWS 프리티어 유의 사항#프리티어 사용 중 요금이 발생 했을 때 대처 방법)
-- [AWS CLI](#AWS CLI)
-	- [AWS CLI소개](#AWS CLI#AWS CLI소개)
-	- [AWS CLI 설치](#AWS CLI#AWS CLI 설치)
-		- [Mac OS 설치](#AWS CLI 설치#Mac OS 설치)
-		- [AWS CLI 자격 증명 : AWS 액세스 키 발급](#AWS CLI 설치#AWS CLI 자격 증명 : AWS 액세스 키 발급)
-		- [Access Key ID](#AWS CLI 설치#Access Key ID)
-		- [Secrete Access Key](#AWS CLI 설치#Secrete Access Key)
-		- [AWS 액세스 키 발급 방법](#AWS CLI 설치#AWS 액세스 키 발급 방법)
-- [AWS CLI 자격증명 설정](#AWS CLI 자격증명 설정)
-	- [AWS CLI 자격 증명 설정 우선 순위](#AWS CLI 자격증명 설정#AWS CLI 자격 증명 설정 우선 순위)
-	- [AWS CLI 자격 증명 설정 : CLI 설정 파일](#AWS CLI 자격증명 설정#AWS CLI 자격 증명 설정 : CLI 설정 파일)
-	- [AWS CLI 자격 증명 설정 : 환경 변수](#AWS CLI 자격증명 설정#AWS CLI 자격 증명 설정 : 환경 변수)
-	- [AWS CLI 자격 증명 설정 : CLI 명령어 옵션](#AWS CLI 자격증명 설정#AWS CLI 자격 증명 설정 : CLI 명령어 옵션)
-	- [AWS CLI 자격 증명 설정 : EC2 인스턴스 프로파일](#AWS CLI 자격증명 설정#AWS CLI 자격 증명 설정 : EC2 인스턴스 프로파일)
-	- [AWS CLI를 통해서 실습 해보기](#AWS CLI 자격증명 설정#AWS CLI를 통해서 실습 해보기)
-- [그 외에 AWS 기본 리전 설정](#그 외에 AWS 기본 리전 설정)
-	- [Region을 default로 설정하는 법](#그 외에 AWS 기본 리전 설정#Region을 default로 설정하는 법)
-	- [AWS CLI 결과 출력 형식 설정](#그 외에 AWS 기본 리전 설정#AWS CLI 결과 출력 형식 설정)
-		- [결과 출력 형식](#AWS CLI 결과 출력 형식 설정#결과 출력 형식)
-	- [AWS CLI 사용자 프로파일 설정](#그 외에 AWS 기본 리전 설정#AWS CLI 사용자 프로파일 설정)
-- [AWS CLI 멀티 사용자 프로파일 예제](#AWS CLI 멀티 사용자 프로파일 예제)
-	- [실습](#AWS CLI 멀티 사용자 프로파일 예제#실습)
-- [기본적인 AWS CLI 사용법](#기본적인 AWS CLI 사용법)
-	- [AWS CLI 사용법 : 디버그 모드 활성화](#기본적인 AWS CLI 사용법#AWS CLI 사용법 : 디버그 모드 활성화)
-	- [AWS CLI 사용법 : 현재 자격증명 정보 확인](#기본적인 AWS CLI 사용법#AWS CLI 사용법 : 현재 자격증명 정보 확인)
-
 
 
 # AWS의 기본적인 셋팅
@@ -88,7 +56,7 @@ brew install awscli
 
 AWS 계정 혹은 IAM 사용자의 액세스 키 발급 필요
 
-![Untitled.png](/img/이미지 창고/Untitled.png)
+![Untitled.png](/img/Untitled.png)
 ### Access Key ID
 
 - 자격 증명 주체를 가리킴
@@ -101,18 +69,18 @@ AWS 계정 혹은 IAM 사용자의 액세스 키 발급 필요
 - 인증 요청한 사람이 정말 A가 맞는지
 - 공개하면 안되는 비밀키
 
-![Untitled-1.png](/img/이미지 창고/Untitled-1.png)
+![Untitled-1.png](/img/Untitled-1.png)
 ### AWS 액세스 키 발급 방법
 
 1. 사이트 접속
 2. 보안 자격 증명 클릭
-![Untitled-2.png](/img/이미지 창고/Untitled-2.png)
+![Untitled-2.png](/img/Untitled-2.png)
 1. 액세스 키 클릭
 2. 새 액세스 키 만들기 클릭
 
-![Untitled-3.png](/img/이미지 창고/Untitled-3.png)
+![Untitled-3.png](/img/Untitled-3.png)
 
-![Untitled-4.png](/img/이미지 창고/Untitled-4.png)
+![Untitled-4.png](/img/Untitled-4.png)
 1. 키 파일 다운로드 클릭
 
 # AWS CLI 자격증명 설정
@@ -155,7 +123,7 @@ CLI 명령어 옵션을 통해 Access Key를 지정하는 방법은 제공하지
 
 IAM 역할(Role)을 EC2 머신에 부여하기 위한 목적, EC2 내에서 AWS 서비스에 대한 권한을 수행할 수 있게 된다.
 
-![Untitled-5.png](/img/이미지 창고/Untitled-5.png)
+![Untitled-5.png](/img/Untitled-5.png)
 ## AWS CLI를 통해서 실습 해보기
 
 ```bash
@@ -329,9 +297,3 @@ aws sts get-caller-identity --debug
 # 현재 AWS CLI 명령어를 수행하고 있는 자격 증명 주체 정보를 확인하는 방법
 aws sts get-caller-identity
 ```
-
----
-
-#AWS
-
----

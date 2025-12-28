@@ -47,10 +47,3 @@ cat /nexus-data/admin.password
 ###### 참조
 [사내 Docker Registry 만들기](https://velog.io/@king/private-docker-registry)
 
-
-
----
-
-#CICD #Nexus
-
----

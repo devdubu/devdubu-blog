@@ -7,7 +7,7 @@ DockerHub를 사용하려고 했더니, Private Repository가 하나 밖에 안�
 
 그러다가 회사에서도 GitLab도 Docker Registry를 지원하는데 github은 없나?
 기웃거리다가 발견했다.
-![Pasted-image-20240112092422.png](/img/이미지 창고/Pasted-image-20240112092422.png)
+![Pasted-image-20240112092422.png](/img/Pasted-image-20240112092422.png)
 위 사진과 같이 <mark>Package</mark>에 들어간 후에, Docker 쪽에 보니까 <mark>Start Git Package~</mark> 라고 되어있다.
 아무튼 오늘은 이 부분을 구축해보려고 한다.
 
@@ -39,8 +39,3 @@ docker push ghcr.io/NAMESPACE/IMAGE_NAME:latest
 ```
 - 여기서 NameSpace란, 현 계정의 UserId를 의미합니다.
 
----
-
-#CICD #git 
-
----

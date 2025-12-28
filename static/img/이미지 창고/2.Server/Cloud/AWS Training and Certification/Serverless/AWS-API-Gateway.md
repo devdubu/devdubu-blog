@@ -1,3 +1,0 @@
----
-slug: "AWS-API-Gateway"
----

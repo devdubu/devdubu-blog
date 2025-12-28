@@ -4,11 +4,11 @@ slug: "Nexus-Npm-구축"
 # Nexus Node Package Manager 구축
 
 - Blob Store를 통해서 File Storage 를 만들고, Repository -> npm (hosted)를 생성합니다.
-![Screenshot-2025-03-15-at-11.10.56-PM.png](/img/이미지 창고/Screenshot-2025-03-15-at-11.10.56-PM.png)
+![Screenshot-2025-03-15-at-11.10.56-PM.png](/img/Screenshot-2025-03-15-at-11.10.56-PM.png)
 
 
 # Role 생성
-![Screenshot-2025-03-15-at-11.22.31-PM.png](/img/이미지 창고/Screenshot-2025-03-15-at-11.22.31-PM.png)
+![Screenshot-2025-03-15-at-11.22.31-PM.png](/img/Screenshot-2025-03-15-at-11.22.31-PM.png)
 
 생성한 repo에 접근하기 위해서는 role을 생성하고 계정에 등록해주어야 합니다.
 
@@ -39,7 +39,7 @@ admin 권한이 있으면 상단 톱니바퀴 버튼에서 설정을 관리할 �
 
 ## User 생성
 
-![Screenshot-2025-03-15-at-11.23.24-PM.png](/img/이미지 창고/Screenshot-2025-03-15-at-11.23.24-PM.png)
+![Screenshot-2025-03-15-at-11.23.24-PM.png](/img/Screenshot-2025-03-15-at-11.23.24-PM.png)
 
 ## Realms 설정
 
@@ -48,10 +48,3 @@ admin 권한이 있으면 상단 톱니바퀴 버튼에서 설정을 관리할 �
 Realms에 `npm Bearer Token Realm`을 Active로 설정합니다.
 
 이걸 설정하지 않으면 npm login 후 클라이언트 ↔ nexus 간 토큰 방식의 인증이 되지 않아 E401 에러가 발생하게 됩니다.
-
-
----
-
-#CICD #Nexus
-
----

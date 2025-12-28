@@ -2,7 +2,7 @@
 slug: "Start-AWS"
 ---
 # AWS Region
-![Pasted-image-20230629102049.png](/img/이미지 창고/Pasted-image-20230629102049.png)
+![Pasted-image-20230629102049.png](/img/Pasted-image-20230629102049.png)
 - AWS Region은 전세계의 걸쳐서 존재하며, Name은 `us-east-1`, `eu-west-3` ... 으로 표현된다.
 - 해당 Region은 DataCenter의 클러스터를 의미한다.
 
@@ -23,7 +23,7 @@ slug: "Start-AWS"
 # AWS Availability Zone
 - 각 Availablity Zones에는 각 리전에 <mark>보통은 3개</mark>, <mark>적게는 2개</mark>, <mark>많게는 6개</mark>가 존재합니다.
 - 예를 들어 `ap-southeast-2`(시드니)를 예를 들면
-![Pasted-image-20230629102905.png](/img/이미지 창고/Pasted-image-20230629102905.png)
+![Pasted-image-20230629102905.png](/img/Pasted-image-20230629102905.png)
 - `ap-southeast-2a`, `ap-southeast-2b`, `ap-southeast-2c` 의 각각의 AZ를 가집니다.
 - 각각의 AZ는 여분의 전원, 네트워킹, 통신 기능을 갖춘 하나 또는 두 개의 개별적엔 데이터 센터로 이루어져 있습니다
 	- 즉, `ap-southeast-2a`하나의 AZ에 <mark>하나 또는 두개</mark>의 데이터 센터가 존재한다.
@@ -48,10 +48,3 @@ slug: "Start-AWS"
 - **Elastic Beanstalk**(Platform as a Service)
 - **Lambda**(Function as a Service)
 - **Rekogition**(Software as a Service)
-
-
----
-
-#AWS 
-
----

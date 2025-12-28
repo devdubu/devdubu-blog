@@ -2,14 +2,14 @@
 slug: "AWS-서비스-개요"
 ---
 # AWS의 성장 배경
-![Pasted-image-20231023094405.png](/img/이미지 창고/Pasted-image-20231023094405.png)
-![Pasted-image-20231023094600.png](/img/이미지 창고/Pasted-image-20231023094600.png)
+![Pasted-image-20231023094405.png](/img/Pasted-image-20231023094405.png)
+![Pasted-image-20231023094600.png](/img/Pasted-image-20231023094600.png)
 
 # AWS 소개
 ## AWS 글로벌 인프라
 ### 리전(Region)
-![Pasted-image-20231023094633.png](/img/이미지 창고/Pasted-image-20231023094633.png)
-![Pasted-image-20231023094832.png](/img/이미지 창고/Pasted-image-20231023094832.png)
+![Pasted-image-20231023094633.png](/img/Pasted-image-20231023094633.png)
+![Pasted-image-20231023094832.png](/img/Pasted-image-20231023094832.png)
 - 리전 코드 해석
 	- **지역**(ap) - **지리적 위치**(northeast) - **순번**(2)
 
@@ -39,7 +39,7 @@ aws ssm get-parameters-by-path --path /aws/service/global-infrastructure/regions
 
 :::
 
-![Pasted-image-20231023100054.png](/img/이미지 창고/Pasted-image-20231023100054.png)
+![Pasted-image-20231023100054.png](/img/Pasted-image-20231023100054.png)
 
 ## AWS Edge Location(AWS 엣지 로케이션)
 :::tip Edge Location?
@@ -48,11 +48,11 @@ aws ssm get-parameters-by-path --path /aws/service/global-infrastructure/regions
 - Lambda@Edge(가까운 지역 위치에서 서버리스 코드 실행)를 통해 성능을 개선하고 지연 시간 단축
 :::
 
-![Pasted-image-20231023100316.png](/img/이미지 창고/Pasted-image-20231023100316.png)
+![Pasted-image-20231023100316.png](/img/Pasted-image-20231023100316.png)
 
 # AWS 주요 서비스 소개
 ## AWS 서비스 포트폴리오
-![Pasted-image-20231023100457.png](/img/이미지 창고/Pasted-image-20231023100457.png)
+![Pasted-image-20231023100457.png](/img/Pasted-image-20231023100457.png)
 
 ## AWS 컴퓨팅 서비스
 
@@ -66,19 +66,19 @@ aws ssm get-parameters-by-path --path /aws/service/global-infrastructure/regions
 - 성능에 따른 다양한 인스턴스 타입 제공
 :::
 
-![Pasted-image-20231023100521.png](/img/이미지 창고/Pasted-image-20231023100521.png)
+![Pasted-image-20231023100521.png](/img/Pasted-image-20231023100521.png)
 
 #### 지원 가능 OS
-![Pasted-image-20231023100644.png](/img/이미지 창고/Pasted-image-20231023100644.png)
+![Pasted-image-20231023100644.png](/img/Pasted-image-20231023100644.png)
 #### AWS EC2 인스턴스 타입 종류
-![Pasted-image-20231023100715.png](/img/이미지 창고/Pasted-image-20231023100715.png)
+![Pasted-image-20231023100715.png](/img/Pasted-image-20231023100715.png)
 
 #### AWS EC2 인스턴스 타입 설명
-![Pasted-image-20231023100730.png](/img/이미지 창고/Pasted-image-20231023100730.png)
+![Pasted-image-20231023100730.png](/img/Pasted-image-20231023100730.png)
 
 #### AWS EC2 T-Family
-![Pasted-image-20231023100820.png](/img/이미지 창고/Pasted-image-20231023100820.png)
-![Pasted-image-20231023100813.png](/img/이미지 창고/Pasted-image-20231023100813.png)
+![Pasted-image-20231023100820.png](/img/Pasted-image-20231023100820.png)
+![Pasted-image-20231023100813.png](/img/Pasted-image-20231023100813.png)
 - 인스턴스 타입 중 특이한 타입이 위의 T-family이다.
 - Bustable 기능을 가지고 있다.
 	- 기준 사용률 밑의 성능으로 사용하능 동안 CPU credit이 축적되며, 기준 성능이 넘치는 CPI가 필요할 때 버스팅해서 사용할 수 있습니다.
@@ -88,7 +88,7 @@ aws ssm get-parameters-by-path --path /aws/service/global-infrastructure/regions
 		- Ex) t2.small : 100% 성능 * 12개 Credit / 1vCPU / 60분 = 20% 성
 
 #### AWS EC2 5세대 인스턴스 Nitro System
-![Pasted-image-20231023101218.png](/img/이미지 창고/Pasted-image-20231023101218.png)
+![Pasted-image-20231023101218.png](/img/Pasted-image-20231023101218.png)
 :::question Nitro System?
 - **Nitro Hypervisor**
 - Nitro Hypervisor는 메모리 및 CPU 할당을 관리함
@@ -106,7 +106,7 @@ aws ssm get-parameters-by-path --path /aws/service/global-infrastructure/regions
 :::
 
 #### AWS EC2 6/7세대 인스턴스 Graviton chip(64Bit Arm Neoverse N1 Core)
-![Pasted-image-20231023102119.png](/img/이미지 창고/Pasted-image-20231023102119.png)
+![Pasted-image-20231023102119.png](/img/Pasted-image-20231023102119.png)
 
 ### Lambda
 :::tip Lambda?
@@ -116,12 +116,12 @@ aws ssm get-parameters-by-path --path /aws/service/global-infrastructure/regions
 - 필요 시에만 코드 실행
 - 사용한 만큼 지불
 - 실시간 파일처리 지원
-![Pasted-image-20231023102302.png](/img/이미지 창고/Pasted-image-20231023102302.png)
+![Pasted-image-20231023102302.png](/img/Pasted-image-20231023102302.png)
 
 :::
 
 #### Lambda 지원 언어
-![Pasted-image-20231023102251.png](/img/이미지 창고/Pasted-image-20231023102251.png)
+![Pasted-image-20231023102251.png](/img/Pasted-image-20231023102251.png)
 
 ## AWS 스토리지 서비스
 
@@ -137,17 +137,17 @@ aws ssm get-parameters-by-path --path /aws/service/global-infrastructure/regions
 - 99.9999% 의 내구성
 - 데이터 암호화 기능 제공
 - 버전 관리 기능 / 정적 웹 사이트 호스팅
-![Pasted-image-20231023102629.png](/img/이미지 창고/Pasted-image-20231023102629.png)
+![Pasted-image-20231023102629.png](/img/Pasted-image-20231023102629.png)
 
 :::
 
 #### Amazon S3 스토리지 클래스
-![Pasted-image-20231023102946.png](/img/이미지 창고/Pasted-image-20231023102946.png)
+![Pasted-image-20231023102946.png](/img/Pasted-image-20231023102946.png)
 - Cold로 갈 수록 저렴하며, 접근성이 낮은 스토리지 입니다.
 - 즉, 대용량이지만, 거의 접근하지 않는 데이터에 적합한 모델 입니다.
 
 #### Amazon S3 사용 예시
-![Pasted-image-20231023103145.png](/img/이미지 창고/Pasted-image-20231023103145.png)
+![Pasted-image-20231023103145.png](/img/Pasted-image-20231023103145.png)
 
 ### Amazon EBS
 :::tip Amazon EBS?
@@ -159,23 +159,14 @@ aws ssm get-parameters-by-path --path /aws/service/global-infrastructure/regions
 - 99.999% 내구성
 - 탄력적 확장 가능
 - 데이터 암호화 기능 제공
-![Pasted-image-20231023103324.png](/img/이미지 창고/Pasted-image-20231023103324.png)
+![Pasted-image-20231023103324.png](/img/Pasted-image-20231023103324.png)
 
 :::
 
 #### EBS to EC2 Attach
-![Pasted-image-20231023103343.png](/img/이미지 창고/Pasted-image-20231023103343.png)
+![Pasted-image-20231023103343.png](/img/Pasted-image-20231023103343.png)
 
 #### Amazon EBS 볼륨 타입
-![Pasted-image-20231023103512.png](/img/이미지 창고/Pasted-image-20231023103512.png)
+![Pasted-image-20231023103512.png](/img/Pasted-image-20231023103512.png)
 - EBS 역시도 EC2와 마찬가지로 버스팅 기능이 존재합니다.
 - 
-
-
-
-
----
-
-#AWS 
-
----

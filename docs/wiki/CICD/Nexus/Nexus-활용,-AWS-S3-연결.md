@@ -17,10 +17,3 @@ https://github.com/DevOpsRunbook/FastCampus/tree/main/Appendix/AWS
 ### 사전 준비사항
 - Linux 실습 환경에서 AWS 연동을 위한 설정을 수행
 - AWS Configure를 Nexus 설치할 서버에 사전에 적용
-
-
----
-
-#CICD #Nexus
-
----

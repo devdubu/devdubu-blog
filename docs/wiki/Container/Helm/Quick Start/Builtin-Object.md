@@ -1,3 +1,0 @@
----
-slug: "Builtin-Object"
----

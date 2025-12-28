@@ -5,13 +5,13 @@ sticker: emoji//2601-fe0f
 ---
 # Cloud 컴퓨팅의 유형
 ## Public 클라우드
-![Pasted-image-20231023090937.png](/img/이미지 창고/Pasted-image-20231023090937.png)
+![Pasted-image-20231023090937.png](/img/Pasted-image-20231023090937.png)
 - 사용자는 컴퓨팅 리소스를 <mark>소유하지 않는다.</mark>
 - 인터넷을 통해 제공합니다.
 - 가상화 기술로 만든 서비스를 그대로 사용합니다.
 
 ## Private 클라우드
-![Pasted-image-20231023091157.png](/img/이미지 창고/Pasted-image-20231023091157.png)
+![Pasted-image-20231023091157.png](/img/Pasted-image-20231023091157.png)
 - 특정 조직 내에서 컴퓨팅 리소스를 <mark>소유</mark>
 - Private 네트워크를 통해 제공
 - 가상 컴퓨팅 기술을 직접 구축
@@ -24,12 +24,12 @@ sticker: emoji//2601-fe0f
 |멀티(Multi) 클라우드|- <mark>다수의 퍼블릭 클라우드</mark>를 사용 <br /> - e.g.AWS+GCP+Azure|
 
 # 클라우드 서비스 제공 업체(CSP)
-![Pasted-image-20231023092024.png](/img/이미지 창고/Pasted-image-20231023092024.png)
-![Pasted-image-20231023092412.png](/img/이미지 창고/Pasted-image-20231023092412.png)
+![Pasted-image-20231023092024.png](/img/Pasted-image-20231023092024.png)
+![Pasted-image-20231023092412.png](/img/Pasted-image-20231023092412.png)
 # 클라우드 서비스의 특징
 :::question 클라우드 서비스?
 - 인터넷을 통해 IT 리소스와 애플리케이션을 사용자가 원할 때 언제든지(on-demand) 사용한 만큼 요금을 내는 서비스
-![Pasted-image-20231023092528.png](/img/이미지 창고/Pasted-image-20231023092528.png)
+![Pasted-image-20231023092528.png](/img/Pasted-image-20231023092528.png)
 
 :::
 
@@ -66,10 +66,10 @@ sticker: emoji//2601-fe0f
 
 # 클라우드 서비스 모델(IaaS/PaaS/SaaS)
 
-![Pasted-image-20231023093513.png](/img/이미지 창고/Pasted-image-20231023093513.png)
+![Pasted-image-20231023093513.png](/img/Pasted-image-20231023093513.png)
 
 # 기존 인프라와 차이점
-![Pasted-image-20231023093832.png](/img/이미지 창고/Pasted-image-20231023093832.png)
+![Pasted-image-20231023093832.png](/img/Pasted-image-20231023093832.png)
 
 
 
