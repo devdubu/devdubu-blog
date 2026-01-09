@@ -42,7 +42,7 @@ Synchronous replication to a standby instance in a different Availability Zone (
 
 ### Multi-AZ DB Cluster
 A deployment with **one writer** and **two readable standbys** in three separate AZs.
-- **Benefits**: Faster failover (typically <35s), lower write latency (semi-synchronous), and provides readable standbys for read scaling.
+- **Benefits**: Faster failover (typically \<35s), lower write latency (semi-synchronous), and provides readable standbys for read scaling.
 
 ### Read Replicas (Scalability)
 Asynchronous replication to read-only instances.
@@ -75,7 +75,7 @@ A safe way to update databases by creating a staging environment that mirrors pr
 1.  **Blue (Production)** environment is replicated to **Green (Staging)** using logical replication.
 2.  Make changes (e.g., major version upgrade, schema change) on Green.
 3.  Test Green environment.
-4.  **Switchover**: Promote Green to Production (typically <1 min downtime).
+4.  **Switchover**: Promote Green to Production (typically \<1 min downtime).
 
 ---
 

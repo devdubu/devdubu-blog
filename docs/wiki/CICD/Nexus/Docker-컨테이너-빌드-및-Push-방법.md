@@ -6,10 +6,10 @@ slug: "Docker-컨테이너-빌드-및-Push-방법"
 ## Nexus vs AWS ECR
 
 ### Docker container 빌드 후 Nexus에 이미지 Push 및 Clair 보안 스캔 수행
-![스크린샷-2023-01-18-오전-9.26.45.png](/img/Pasted-image-2023-01-18-오전-9.26.45.png)
+![스크린샷-2023-01-18-오전-9.26.45.png](/img/스크린샷-2023-01-18-오전-9.26.45.png)
 
 ### Docker Container build 후 AWS ECR에 이미지 Push 및 ECR 보안 스캔 수행
-![스크린샷-2023-01-18-오전-9.31.55.png](/img/Pasted-image-2023-01-18-오전-9.31.55.png)
+![스크린샷-2023-01-18-오전-9.31.55.png](/img/스크린샷-2023-01-18-오전-9.31.55.png)
 
 ## Nexus Registry
 :::todo Nexus Registry 설치 및 설정 실습
