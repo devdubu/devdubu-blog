@@ -1,0 +1,34 @@
+{
+  "title": {
+    "message": "DevDubu Blog",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "ParasiX AI Logo",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.위키": {
+    "message": "Wiki",
+    "description": "Navbar item with label 위키"
+  },
+  "item.label.에세이": {
+    "message": "Essays",
+    "description": "Navbar item with label 에세이"
+  },
+  "item.label.스니펫": {
+    "message": "Snippets",
+    "description": "Navbar item with label 스니펫"
+  },
+  "item.label.회고": {
+    "message": "Retros",
+    "description": "Navbar item with label 회고"
+  },
+  "item.label.블로그": {
+    "message": "Blog",
+    "description": "Navbar item with label 블로그"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}

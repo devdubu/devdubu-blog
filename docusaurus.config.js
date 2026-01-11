@@ -12,7 +12,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 const config = {
   title: 'My Site',
   tagline: 'Dinosaurs are cool',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/ParasiX-AI-Logo.png',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -24,6 +24,7 @@ const config = {
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
+  trailingSlash: false,
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -36,8 +37,26 @@ const config = {
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
+    defaultLocale: 'ko',
+    locales: ['ko', 'en'],
+    localeConfigs: {
+      // und: {
+      //   label: 'Gateway',
+      //   direction: 'ltr',
+      //   path: '/',
+      //   htmlLang: 'ko',
+      // },
+      ko: {
+        label: '한국어',
+        direction: 'ltr',
+        // path: '/', // Removed explicit path
+      },
+      en: {
+        label: 'English',
+        direction: 'ltr',
+        path: 'en',
+      },
+    },
   },
 
   presets: [
@@ -83,37 +102,46 @@ const config = {
         respectPrefersColorScheme: true,
       },
       navbar: {
-        title: 'My Site',
+        title: '', // Removed title as requested
         logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          alt: 'ParasiX AI Logo',
+          src: '/img/ParasiX-AI-Logo.png',
         },
         items: [
           {
             type: 'docSidebar',
             sidebarId: 'wikiSidebar',
             position: 'left',
-            label: 'Wiki',
+            label: '위키',
           },
+          { to: '/blog', label: '블로그', position: 'left' },
           {
             type: 'docSidebar',
             sidebarId: 'essaySidebar',
             position: 'left',
-            label: 'Essays',
-          },
-          {
-            type: 'docSidebar',
-            sidebarId: 'snippetSidebar',
-            position: 'left',
-            label: 'Snippets',
+            label: '에세이',
           },
           {
             type: 'docSidebar',
             sidebarId: 'retrospectiveSidebar',
             position: 'left',
-            label: 'Retros',
+            label: '회고',
           },
-          { to: '/blog', label: 'Blog', position: 'left' },
+          {
+            type: 'dropdown',
+            label: 'Language',
+            position: 'right',
+            items: [
+              {
+                label: '한국어',
+                to: '/ko/',
+              },
+              {
+                label: 'English',
+                to: '/en/',
+              },
+            ],
+          },
           {
             href: 'https://github.com/facebook/docusaurus',
             label: 'GitHub',
